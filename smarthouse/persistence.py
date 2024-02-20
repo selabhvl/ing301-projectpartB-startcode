@@ -36,6 +36,8 @@ class SmartHouseRepository:
         all referenced objects within the object structure (e.g. floors, rooms, devices) 
         are retrieved as well. 
         """
+        # TODO: START here! remove the following stub implementation and implement this function 
+        #       by retrieving the data from the database via SQL `SELECT` statements.
         return NotImplemented
 
 
@@ -44,6 +46,7 @@ class SmartHouseRepository:
         Retrieves the most recent sensor reading for the given sensor if available.
         Returns None if the given object has no sensor readings.
         """
+        # TODO: After loading the smarthouse, continue here
         return NotImplemented
 
 
@@ -51,6 +54,10 @@ class SmartHouseRepository:
         """
         Saves the state of the given actuator in the database. 
         """
+        # TODO: Implement this method. You will probably need to extend the existing database structure: e.g.
+        #       by creating a new table (`CREATE`), adding some data to it (`INSERT`) first, and then issue
+        #       and SQL `UPDATE` statement. Remember also that you will have to call `commit()` on the `Connection`
+        #       stored in the `self.conn` instance variable.
         pass
 
 
@@ -67,6 +74,8 @@ class SmartHouseRepository:
         The result should be a dictionary where the keys are strings representing dates (iso format) and 
         the values are floating point numbers containing the average temperature that day.
         """
+        # TODO: This and the following statistic method are a bit more challenging. Try to design the respective 
+        #       SQL statements first in a SQL editor like Dbeaver and then copy it over here.  
         return NotImplemented
 
     
@@ -77,5 +86,6 @@ class SmartHouseRepository:
         the average recorded humidity in that room at that particular time.
         The result is a (possibly empty) list of number representing hours [0-23].
         """
+        # TODO: implement
         return NotImplemented
 
