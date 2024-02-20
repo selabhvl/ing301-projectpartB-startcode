@@ -2,11 +2,12 @@
 
 ## Formål
 
-I det andre steget av prosjektet skal vi sørge for at den informasjonen som representeres som
-et objektstruktur på _runtime_ lagres permanent på en hard-disk slik at vi ikke mister noe
-informasjonen når programmet blir avsluttet.
+I det neste steget av prosjektet skal vi sørge for at den informasjonen som representeres i
+et objektstruktur lagres permanent på en hard-disk slik at vi ikke mister noe
+informasjonen når programmet avsluttes.
 
-For å gjøre dette skal vi bruke det lettvekt databasesystem [SQLite](https://www.sqlite.org/index.html).
+For å gjøre dette skal vi bruke et lettvekt databasesystem: [SQLite](https://www.sqlite.org/index.html), som 
+er også [innebygget i Python sitt standard bibliotek](https://docs.python.org/3/library/sqlite3.html).
 
 Applikasjonen fra del A skal utvides slik at
 - den kan leser byggningsstrukturen og enhetsinformasjoner fra databasen,
@@ -20,7 +21,7 @@ Alternativ kan dere også bruke et løsningsforslag til prosjekt del A som utgan
 Siste blir delt med dere på Canvas.
 
 
-Vi antar at deres prosjekt repository ser altså noenlunne slik ut (eventuelt har dere ha laget flere Python filer):
+Vi antar at deres prosjekt repository ser noenlunne slik ut akkurat nå (eventuelt har dere ha laget flere Python moduler enn oss her):
 ```
 .
 ├── README.md
@@ -33,8 +34,10 @@ Vi antar at deres prosjekt repository ser altså noenlunne slik ut (eventuelt ha
    └── test_part_a.py
 ```
 
-Dere skal nå kopiere de tre filene som befinner seg i denne repository'en
-inn i deres repository slik den resulterende mappestrukturen ser ut som
+Dere skal nå kopiere de tre filene som befinner seg i denne repository'en inn i deres prosjekt.
+Den enkleste måtem å gjøre det på er slik: Trykk på `Code` (grønne knappen) også velger dere `Download ZIP`.
+Det nedlastede arkivet pakkes ut i roten av deres prosjektrepo, slik at de nye filene havner på rett plass.
+Den resulterende mappestrukturen må se slik ut:
 
 ```
 .
@@ -51,41 +54,25 @@ inn i deres repository slik den resulterende mappestrukturen ser ut som
    ├── test_part_a.py
    └── test_part_b.py           <-- nytt
 ```
+Hvis dere har oppdatert inneholdet i `README.md`, pass på at dere ikker overskrive deres endringer!
+Hvis dere har laget filer med samme navn som dem som er gitt her, så må dere skifte navn på deres egne file først for at 
+alt fungerer (men det burde være lite sannsynlighet for det).
 
-En liten forklaring på hva disse tre nye filene gjør:
-- `db.sqlite` SQLite database filen som inneholder et ferdig datasett dere skal jobbe videres med
-- `persistence.py` inneholder et enkelt database grensesnitt klasse (`SmartHousePersistence`) og en klasse med analysemetoder som dere skal utvikle.
-- `test_part_b.py` inneholder tester som dere kan bruke for å sjekke om alt ønsket funksjonalitet har blitt utviklet og fungerer.
+En liten forklaring på hva de tre nye filene gjør:
+- `data/db.sqlite` SQLite database filen som inneholder et ferdig datasett dere skal jobbe videres med
+- `smarthouse/persistence.py` inneholder et enkelt database grensesnitt klasse (`SmartHouseRepository`). Denne inneholder en del metoder som dere skal implementere.
+- `tests/test_part_b.py` inneholder tester som dere kan bruke for å sjekke om alt har blitt utviklet og fungerer.
 
-Videre forventer testene at `main.py` filen inneholder en funskjon `load_demo_house()` som skal erstatte `build_demo_house()` i det lange løpet.
+Når dere gå inn og åpne `smarthouse/persistence.py` så finner dere 5 metoder dere skal implementere: 
 
-Dere sjak gå altså inn i `main.py` og legge inn en import på toppen
-```python
-from persistence import SmartHousePersistence
-```
-og i tillegg lage en tom `load_demo_house()` funksjon slik et valgfri sted i filen:
+1. `load_smarthouse_deep()` (svarer til testene `test_basic_no_of_rooms()`, `test_basic_get_area_size()` og `test_basic_get_no_of_devices()`)
+2. `get_latest_reading()` (svarer til testen `test_basic_read_values()`)
+3. `update_actuator_state()` (svarer til testen `test_intermediate_save_actuator_state()`)
+4. `calc_avg_temperatures_in_room()` (svarer til testen `test_zadvanced_test_humidity_hours()`)
+5. `calc_hours_with_humidity_above()` (svarer til testen `test_zadvanced_test_temp_avgs()`)
 
-```python
-def load_demo_house(persistence: SmartHousePersistence) -> SmartHouse:
-    result = SmartHouse()
-    # TODO read rooms, devices and their locations from the database
-    return result
-```
-
-Dere kan sjekke at alt er satt opp riktig ved kjøre testene i `persistence_test.py`.
-Når dere kjører alle testen skal ett av de seks test metodene i denne filen være _grønt_ mens de andre fem skal feile.
-Dvs. hvis dere bare kjører `test_db_ok` alene skal den gi `OK`:
-
-```
-Testing started at ...
-Launching unittests with arguments python -m unittest persistence_test.PersistenceTest.test_db_ok in ...
-
-Ran 1 test in 0.003s
-
-OK
-
-Process finished with exit code 0
-```
+Hver metode har en kommentar som beskriver hva som skal gjøres.
+Den beste måten å komme i gang med denne oppgaven er å begynne med å _utforske_ den gitte databasen (`data/db.sqlite`).
 
 ## Utforsk tabellen
 
@@ -136,28 +123,34 @@ vil gi der romstrukturen av det demohuset dere kjenner fra første delen.
 Målet er som sagt å få alle testene grønt.
 Testene kan deles inn i tre grupper:
 
-`test_loading_demo_house` tester om dere har `load_demo_house` i `main.py` riktig implementert.
-Den metoden skal lese romstrukturen og enhetsinformasjonen fra databasen og bygge opp
-objesktrukturen av demo huset litt sånn som dere har gjort det i `build_demo_house`.
+### `test_basic_...`
 
-`test_updating_sensor_state` tester at forandringer på statusen til en aktuator lagres i databasen.
-F.eks. slit at databasen vet at en lyspære er slått på eller av eller hva temperatur en varmeenhet er stilt inn på.
+Her må dere skrive enkle SQL `SELECT` spørringer i `load_smarthouse_deep()` og `get_latest_reading()` ved å bruke `cursor()`
+metoden i `SmartHouseRepository` klassen. Dere kan [ta en titt i Python dokumentasjon av `sqlite3` modulen](https://docs.python.org/3/library/sqlite3.html)
+for å sjekke hvordan skriver SQL i Python og håndterer resultatene.
+
+### `test_intermediate_...`
+
+Her må dere implementere funksjonalitet for at forandringer i objektene (aktuatorer) skal lagres varig i databasen.
 For å realisere dette må dere kanskje utvide database strukturen: Kanskje legge til tabeller med `CREATE TABLE` eller
 legge til en kolonne til en eksisterende tabell med `ALTER TABLE`.
-I tillegg må `Device` (sub)klassene kanskje utvides at disse vet om deres database-relatert metainformasjon (`id`) og har en tilgang til databasen (dvs. `sqlite3.Cursor` objekter).
+Etterpå må kanskje legges til noe data som oppretter koblinger mot de eksisterende radene ved å bruke `INSERT` før 
+dere til slutt kan bruke `UPDATE` for oppdatere radene i tabellen. 
+Husk å kalle `commit()` på `Connection` objektet for at endrinene blir med!
 
-De resterende testene `test_analytics_easy`, `test_analytics_medium` og `test_analytics_advanced` tester
-funksjonaliteten av `SmartHouseAnalytics` klassen.
-Denne inneholder en del tomme funksjoner som dere skal lage innhold for.
+### `test_advanced_...`
+
+De resterende testene svarer til "statistikk"-funksjonen i `SmartHouseRepository`.
 Konkret må dere skrive et tilsvarende `SELECT` spørring.
+Disse kan anses som "litt av en nøtt" men bare prøv å se hvor langt dere kommer.
+Følgende referanser kunne eventuelt være nyttig å bruke:
 
-Det kan være greit å utvikle i DBeaver først før dere legger det inn i et `cursor.execute("...")`
-Spørringene tar seg gradvis opp i vanskelighetsgraden.
-Akkurat det siste kan være litt "tricky", følgende ressurser kunne være hjelpsom der:
 
 - https://www.sqlite.org/lang_datefunc.html
 - https://www.w3resource.com/sql/subqueries/understanding-sql-subqueries.php
 - https://www.w3schools.com/sql/sql_having.asp
+
+Det kan være greit å utvikle i DBeaver først før dere legger det inn i et `cursor.execute("...")`
 
 Lykke til!
 
