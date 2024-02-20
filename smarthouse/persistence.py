@@ -57,8 +57,25 @@ class SmartHouseRepository:
     # statistics
 
     
+    def calc_avg_temperatures_in_room(self, room, from_date: Optional[str] = None, until_date: Optional[str] = None) -> dict:
+        """Calculates the average temperatures in the given room for the given time range by
+        fetching all available temperature sensor data (either from a dedicated temperature sensor 
+        or from an actuator, which includes a temperature sensor like a heat pump) from the devices 
+        located in that room, filtering the measurement by given time range.
+        The latter is provided by two strings, each containing a date in the ISO 8601 format.
+        If one argument is empty, it means that the upper and/or lower bound of the time range are unbounded.
+        The result should be a dictionary where the keys are strings representing dates (iso format) and 
+        the values are floating point numbers containing the average temperature that day.
+        """
+        return NotImplemented
 
-
-
-
+    
+    def calc_hours_with_humidity_above(self, room, date: str) -> list:
+        """
+        This function determines during which hours of the given day
+        there were more than three measurements in that hour having a humidity measurement that is above
+        the average recorded humidity in that room at that particular time.
+        The result is a (possibly empty) list of number representing hours [0-23].
+        """
+        return NotImplemented
 
