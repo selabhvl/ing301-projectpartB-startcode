@@ -16,9 +16,12 @@ Applikasjonen fra del A skal utvides slik at
 
 ## Setup
 
-For å gjøre denne oppgaven kan dere jobbe direkte videre på deres eksisterende prosjekt.
-Alternativ kan dere også bruke et løsningsforslag til prosjekt del A som utgangspunkt.
-Siste blir delt med dere på Canvas.
+**Viktig Info:** Denne oppgaven bygger umiddelbart på Del A og det forventes at filene fra denne repository'en 
+kopieres inn i et prosjekt der steg A er ferdig implementert. 
+Du har to muligheter her:
+
+1. Enten du bygger ummiddelbart videre på ditt eksisterende prosjekt.
+2. Eller du begynner med et "fersk" prosjekt basert på vår løsningsforlag (du finner det på Canvas)
 
 
 Vi antar at deres prosjekt repository ser noenlunne slik ut akkurat nå (eventuelt har dere ha laget flere Python moduler enn oss her):
