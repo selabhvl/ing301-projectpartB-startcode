@@ -7,7 +7,7 @@ et objektstruktur lagres permanent på en hard-disk slik at vi ikke mister noe
 informasjonen når programmet avsluttes.
 
 For å gjøre dette skal vi bruke et lettvekt databasesystem: [SQLite](https://www.sqlite.org/index.html), som 
-er også [innebygget i Python sitt standard bibliotek](https://docs.python.org/3/library/sqlite3.html).
+også er [innebygget i Python sitt standard bibliotek](https://docs.python.org/3/library/sqlite3.html).
 
 Applikasjonen fra del A skal utvides slik at
 - den kan leser byggningsstrukturen og enhetsinformasjoner fra databasen,
@@ -16,15 +16,15 @@ Applikasjonen fra del A skal utvides slik at
 
 ## Setup
 
-**Viktig Info:** Denne oppgaven bygger umiddelbart på Del A og det forventes at filene fra denne repository'en 
+**Viktig Info:** Denne oppgaven bygger umiddelbart på Del A og det forventes at filene fra repository'et for del B 
 kopieres inn i et prosjekt der steg A er ferdig implementert. 
+
 Du har to muligheter her:
 
-1. Enten du bygger ummiddelbart videre på ditt eksisterende prosjekt.
-2. Eller du begynner med et "fersk" prosjekt basert på vår løsningsforlag (du finner det på Canvas)
+1. Du bygger ummiddelbart videre på ditt eksisterende prosjekt, eller
+2. Du begynner med et "fersk" prosjekt basert på vår løsningsforlag (du finner det på Canvas)
 
-
-Vi antar at deres prosjekt repository ser noenlunne slik ut akkurat nå (eventuelt har dere ha laget flere Python moduler enn oss her):
+Vi antar at prosjekt repository for del A ser noenlunne slik ut akkurat nå (eventuelt har dere laget fler Python moduler enn oss her):
 ```
 .
 ├── README.md
@@ -37,10 +37,10 @@ Vi antar at deres prosjekt repository ser noenlunne slik ut akkurat nå (eventue
    └── test_part_a.py
 ```
 
-Dere skal nå kopiere de tre filene som befinner seg i denne repository'en inn i deres prosjekt.
-Den enkleste måtem å gjøre det på er slik: Trykk på `Code` (grønne knappen) også velger dere `Download ZIP`.
+Dere skal nå kopiere de tre filene som befinner seg i repository'et for del B inn.
+Den enkleste måtem å gjøre det på er slik: Trykk på `Code` (grønne knappen) og så velger dere `Download ZIP`.
 Det nedlastede arkivet pakkes ut i roten av deres prosjektrepo, slik at de nye filene havner på rett plass.
-Den resulterende mappestrukturen må se slik ut:
+Den resulterende mappestrukturen skal se slik ut:
 
 ```
 .
@@ -57,16 +57,17 @@ Den resulterende mappestrukturen må se slik ut:
    ├── test_part_a.py
    └── test_part_b.py           <-- nytt
 ```
-Hvis dere har oppdatert inneholdet i `README.md`, pass på at dere ikker overskrive deres endringer!
-Hvis dere har laget filer med samme navn som dem som er gitt her, så må dere skifte navn på deres egne file først for at 
+Hvis dere har oppdatert inneholdet i `README.md`, pass på at dere ikker overskrive deres endringer! Flytt evt. README.md for del A over i en READMEA.m
+
+Hvis dere har laget andre filer med samme navn som dem som er gitt her, så må dere skifte navn på deres egne file først for at 
 alt fungerer (men det burde være lite sannsynlighet for det).
 
 En liten forklaring på hva de tre nye filene gjør:
-- `data/db.sqlite` SQLite database filen som inneholder et ferdig datasett dere skal jobbe videres med
+- `data/db.sqlite` SQLite database filen som inneholder et ferdig datasett dere skal jobbe videre med
 - `smarthouse/persistence.py` inneholder et enkelt database grensesnitt klasse (`SmartHouseRepository`). Denne inneholder en del metoder som dere skal implementere.
 - `tests/test_part_b.py` inneholder tester som dere kan bruke for å sjekke om alt har blitt utviklet og fungerer.
 
-Når dere gå inn og åpne `smarthouse/persistence.py` så finner dere 5 metoder dere skal implementere: 
+Når dere går inn og åpner `smarthouse/persistence.py` så finner dere 5 metoder dere skal implementere: 
 
 1. `load_smarthouse_deep()` (svarer til testene `test_basic_no_of_rooms()`, `test_basic_get_area_size()` og `test_basic_get_no_of_devices()`)
 2. `get_latest_reading()` (svarer til testen `test_basic_read_values()`)
@@ -75,32 +76,31 @@ Når dere gå inn og åpne `smarthouse/persistence.py` så finner dere 5 metoder
 5. `calc_hours_with_humidity_above()` (svarer til testen `test_zadvanced_test_temp_avgs()`)
 
 Hver metode har en kommentar som beskriver hva som skal gjøres.
-Den beste måten å komme i gang med denne oppgaven er å begynne med å _utforske_ den gitte databasen (`data/db.sqlite`).
+Den beste måten å komme i gang med denne oppgaven er å begynne med å _utforske_ databasen i (`data/db.sqlite`).
 
 ## Utforsk tabellen
 
 Oppgaven deres er nå til å få alle testene å bli grønn.
-Før dere begynner med koding da, kan det være lurt å utforske databasen litt i forkant.
+Før dere begynner med koding, kan det være lurt å utforske databasen litt i forkant.
 Dere kan bruke et verktøy som [DBeaver](https://dbeaver.io/) til dette.
 
 Når dere åpner DBeaver for første gang skal dere til venstre se et vindu som heter `Database Navigator`.
 Den ligner litt på filtre "explorer".
 
-**TIPPS**: Hvis man har rotet seg bort å forskyvet vinduene hit og dit kan man komme seg tilbake til
+**TIPS**: Hvis man har rotet seg bort å forskyvet vinduene hit og dit kan man komme seg tilbake til
 utgangspunktet ved å trykke på `Window` (i vindu menyen) -> `Reset Perspective`.
-
 
 Gjør så en høyreklikk i `Database Navigator` og  `Create` > `Connection` i kontekstmenyen.
 I det nye vinduet som kommer opp, velg `SQLite` og så `Next`.
 Cursoren skulle stå i et felt som heter `Path`.
 Her skal vi skrive inn filstien til `db.sqlite` filen.
 
-For å finne filstien kan dere
+For å finne filstien:
 - Hvis dere bruker PyCharm: I Project-Explorer ved å høyreklikke på filen og så `Copy Path / Reference` -> `Absolute Path`.
-- I VS Code: Skrive `pwd` i terminalvinduet, kopiere inn den stien som blir gitt ut som resultat og setter `db.sqlite` på slutten.
+- Hvis dere bruker VS Code: Skrive `pwd` i terminalvinduet, kopiere inn den stien som blir gitt ut som resultat og setter `db.sqlite` på slutten.
 
 Nå kan dere lime inn den stien vi nettopp hadde kopiert i DBeaver vinduet.
-Hvis dere trykker på `Connection details (type, name, ...)` knappen åpnes et nytt vindu da dere kan
+Hvis dere trykker på `Connection details (type, name, ...)`-knappen åpnes et nytt vindu da dere kan
 gi et mer dekkende navn til forbindelsen, f.eks `ING301ProjectB`.
 Dere avslutte med å trykke på `Finish`.
 
@@ -147,7 +147,6 @@ De resterende testene svarer til "statistikk"-funksjonen i `SmartHouseRepository
 Konkret må dere skrive et tilsvarende `SELECT` spørring.
 Disse kan anses som "litt av en nøtt" men bare prøv å se hvor langt dere kommer.
 Følgende referanser kunne eventuelt være nyttig å bruke:
-
 
 - https://www.sqlite.org/lang_datefunc.html
 - https://www.w3resource.com/sql/subqueries/understanding-sql-subqueries.php
